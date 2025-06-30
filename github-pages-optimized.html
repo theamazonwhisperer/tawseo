@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon SEO Copywriter Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📄</text></svg>">
+    <style>
+        body { 
+            margin: 0; 
+            padding: 0; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+        }
+        .animate-spin { 
+            animation: spin 1s linear infinite; 
+        }
+        @keyframes spin { 
+            0% { transform: rotate(0deg); } 
+            100% { transform: rotate(360deg); } 
+        }
+        .hidden { 
+            display: none !important; 
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+        }
+        .notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .notification.error {
+            background: #ef4444;
+        }
+        .character-count.good {
+            color: #059669;
+        }
+        .character-count.warning {
+            color: #d97706;
+        }
+        .character-count.error {
+            color: #dc2626;
+        }
+        .form-section {
+            border-left: 4px solid #e5e7eb;
+            padding-left: 1rem;
+        }
+        .form-section.active {
+            border-left-color: #3b82f6;
+        }
+        @media (max-width: 768px) {
+            .mobile-col {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- App Container -->
+    <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                    <div>
+                        <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">
+                            📄 Amazon SEO Copywriter Pro
+                        </h1>
+                        <p class="text-gray-600 mt-2">
+                            Generate optimized Amazon listings with professional SEO
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="flex bg-gray-100 rounded-lg p-1">
+                            <button id="singleMode" class="px-4 py-2 rounded-md text-sm transition-all bg-white shadow text-blue-600">
+                                📄 Single Product
+                            </button>
+                            <button id="familyMode" class="px-4 py-2 rounded-md text-sm transition-all text-gray-600 hover:text-gray-800">
+                                👥 Product Family
+                            </button>
+                        </div>
+                        <button id="saveBtn" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm">
+                            💾 Save
+                        </button>
+                        <button id="loadBtn" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm">
+                            📁 Load
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- Sidebar -->
+                <div class="lg:col-span-3">
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <nav class="space-y-2">
+                            <button id="inputTab" class="w-full text-left px-4 py-3 rounded-lg text-sm transition-all bg-blue-100 text-blue-700">
+                                📝 Input Form
+                            </button>
+                            <button id="templatesTab" class="w-full text-left px-4 py-3 rounded-lg text-sm transition-all hover:bg-gray-100">
+                                📋 Templates
+                            </button>
+                            <button id="validationTab" class="w-full text-left px-4 py-3 rounded-lg text-sm transition-all hover:bg-gray-100">
+                                ✅ Validation
+                            </button>
+                            <button id="resultsTab" class="w-full text-left px-4 py-3 rounded-lg text-sm transition-all hover:bg-gray-100">
+                                📊 Results
+                            </button>
+                        </nav>
+
+                        <!-- Product Family Selector -->
+                        <div id="familySelector" class="mt-6 pt-6 border-t hidden">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="font-semibold text-gray-900 text-sm">Products</h3>
+                                <button id="addProductBtn" class="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-all">
+                                    ➕
+                                </button>
+                            </div>
+                            <div id="productList" class="space-y-2">
+                                <!-- Products will be added here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content Area -->
+                <div class="lg:col-span-9">
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        
+                        <!-- Input Tab -->
+                        <div id="inputContent" class="space-y-6">
+                            <div class="flex items-center justify-between">
+                                <h2 id="contentTitle" class="text-xl lg:text-2xl font-bold text-gray-900">Product Information</h2>
+                                <div class="text-sm text-gray-500">
+                                    <span id="currentProductIndicator">Product 1 of 1</span>
+                                </div>
+                            </div>
+
+                            <!-- Shared Information Section -->
+                            <div class="form-section active">
+                                <h3 class="text-lg font-semibold text-gray-900 mb-4">Brand Information</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Brand Name *</label>
+                                        <input type="text" id="brandName" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter brand name">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Materials/Ingredients</label>
+                                        <input type="text" id="materials" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Materials or ingredients">
+                                    </div>
+                                </div>
+                                <div class="mt-4">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Target Audience/Customer Avatar</label>
+                                    <textarea id="targetAudience" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Describe your target customer in detail"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Product-Specific Information Section -->
+                            <div class="form-section">
+                                <h3 class="text-lg font-semibold text-gray-900 mb-4">Product Details</h3>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Product Name *</label>
+                                        <input type="text" id="productName" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter product name">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Main Keyword *</label>
+                                        <input type="text" id="mainKeyword" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Primary keyword">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Secondary Keywords</label>
+                                        <input type="text" id="secondaryKeywords" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Secondary keywords (comma separated)">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Pack Size/Quantity</label>
+                                        <input type="text" id="packSize" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Pack size or quantity">
+                                    </div>
+                                </div>
+
+                                <div class="mt-6 space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Bullet Point Keywords</label>
+                                        <textarea id="bulletPointKeywords" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Keywords specifically for bullet points"></textarea>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Bullet Point Headers</label>
+                                        <textarea id="bulletPointHeaders" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Suggested headers for bullet points"></textarea>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Description Keywords</label>
+                                        <textarea id="descriptionKeywords" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Keywords for product description"></textarea>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Product Features</label>
+                                        <textarea id="productFeatures" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Main features of the product"></textarea>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">MKL Keywords (for Generic Search Terms)</label>
+                                        <textarea id="mklKeywords" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Full keyword list for backend search terms"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Generate Button -->
+                            <div class="flex justify-center pt-6">
+                                <button id="generateBtn" class="px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50 transition-all font-semibold text-lg">
+                                    📄 Generate SEO Content
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Templates Tab -->
+                        <div id="templatesContent" class="space-y-6 hidden">
+                            <h2 class="text-xl font-bold text-gray-900">Templates</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="p-4 border border-gray-200 rounded-lg hover:border-blue-300 cursor-pointer transition-all" data-template="supplements">
+                                    <h3 class="font-semibold text-gray-900">Supplements</h3>
+                                    <p class="text-sm text-gray-600 mt-1">Health & wellness products</p>
+                                </div>
+                                <div class="p-4 border border-gray-200 rounded-lg hover:border-blue-300 cursor-pointer transition-all" data-template="electronics">
+                                    <h3 class="font-semibold text-gray-900">Electronics</h3>
+                                    <p class="text-sm text-gray-600 mt-1">Tech gadgets & devices</p>
+                                </div>
+                                <div class="p-4 border border-gray-200 rounded-lg hover:border-blue-300 cursor-pointer transition-all" data-template="home">
+                                    <h3 class="font-semibold text-gray-900">Home & Garden</h3>
+                                    <p class="text-sm text-gray-600 mt-1">Household items & tools</p>
+                                </div>
+                                <div class="p-4 border border-gray-200 rounded-lg hover:border-blue-300 cursor-pointer transition-all" data-template="beauty">
+                                    <h3 class="font-semibold text-gray-900">Beauty</h3>
+                                    <p class="text-sm text-gray-600 mt-1">Cosmetics & skincare</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Validation Tab -->
+                        <div id="validationContent" class="space-y-6 hidden">
+                            <h2 class="text-xl font-bold text-gray-900">Compliance & Validation</h2>
+                            <div class="space-y-4">
+                                <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                    <h3 class="font-medium text-green-800 mb-2">✅ Character Count Guidelines</h3>
+                                    <ul class="text-sm text-green-700 space-y-1">
+                                        <li>• Title: 175-200 characters</li>
+                                        <li>• Bullet Points: 1250-1750 characters total</li>
+                                        <li>• Description: 1300-1500 characters</li>
+                                        <li>• Search Terms: Up to 500 characters</li>
+                                    </ul>
+                                </div>
+                                <div class="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                                    <h3 class="font-medium text-amber-800 mb-2">⚠️ Forbidden Words</h3>
+                                    <p class="text-sm text-amber-700">
+                                        Avoid: "best", "top-rated", medical claims, time-sensitive claims, superlatives
+                                    </p>
+                                </div>
+                                <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                                    <h3 class="font-medium text-blue-800 mb-2">📋 Amazon TOS Guidelines</h3>
+                                    <ul class="text-sm text-blue-700 space-y-1">
+                                        <li>• No pricing information in listings</li>
+                                        <li>• No promotional language or incentives</li>
+                                        <li>• No HTML tags or special characters</li>
+                                        <li>• No competitor mentions</li>
+                                        <li>• No review or rating references</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Results Tab -->
+                        <div id="resultsContent" class="space-y-6 hidden">
+                            <div class="flex items-center justify-between">
+                                <h2 class="text-xl font-bold text-gray-900">Generated Content</h2>
+                                <div class="flex gap-2">
+                                    <button id="exportBtn" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-all text-sm">
+                                        💾 Export All
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Product Family Selector for Results -->
+                            <div id="resultsProductSelector" class="hidden">
+                                <div class="flex flex-wrap gap-2 mb-6">
+                                    <!-- Product buttons will be added here -->
+                                </div>
+                            </div>
+
+                            <!-- Empty State -->
+                            <div id="emptyState" class="text-center py-12">
+                                <div class="text-4xl mb-4">📄</div>
+                                <p class="text-gray-600">Fill out the form and generate content to see results here.</p>
+                            </div>
+
+                            <!-- Results -->
+                            <div id="generatedResults" class="space-y-6 hidden">
+                                <!-- Title -->
+                                <div class="bg-gray-50 rounded-lg p-6">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <h3 class="text-lg font-semibold text-gray-900">Product Title</h3>
+                                        <div class="flex items-center gap-2">
+                                            <span id="titleCharCount" class="text-sm px-2 py-1 rounded character-count"></span>
+                                            <button onclick="copyToClipboard('generatedTitle')" class="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-all">📋</button>
+                                        </div>
+                                    </div>
+                                    <p id="generatedTitle" class="text-gray-800 leading-relaxed"></p>
+                                </div>
+
+                                <!-- Bullet Points -->
+                                <div class="bg-gray-50 rounded-lg p-6">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <h3 class="text-lg font-semibold text-gray-900">Bullet Points</h3>
+                                        <div class="flex items-center gap-2">
+                                            <span id="bulletsCharCount" class="text-sm px-2 py-1 rounded character-count"></span>
+                                            <button onclick="copyBulletPoints()" class="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-all">📋</button>
+                                        </div>
+                                    </div>
+                                    <div id="generatedBullets" class="space-y-3"></div>
+                                </div>
+
+                                <!-- Description -->
+                                <div class="bg-gray-50 rounded-lg p-6">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <h3 class="text-lg font-semibold text-gray-900">Product Description</h3>
+                                        <div class="flex items-center gap-2">
+                                            <span id="descriptionCharCount" class="text-sm px-2 py-1 rounded character-count"></span>
+                                            <button onclick="copyToClipboard('generatedDescription')" class="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-all">📋</button>
+                                        </div>
+                                    </div>
+                                    <p id="generatedDescription" class="text-gray-800 leading-relaxed"></p>
+                                </div>
+
+                                <!-- Search Terms -->
+                                <div class="bg-gray-50 rounded-lg p-6">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <h3 class="text-lg font-semibold text-gray-900">Backend Search Terms</h3>
+                                        <div class="flex items-center gap-2">
+                                            <span id="searchTermsCharCount" class="text-sm px-2 py-1 rounded character-count"></span>
+                                            <button onclick="copyToClipboard('generatedSearchTerms')" class="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-all">📋</button>
+                                        </div>
+                                    </div>
+                                    <p id="generatedSearchTerms" class="text-gray-800 leading-relaxed font-mono text-sm bg-white p-4 rounded border"></p>
+                                </div>
+
+                                <!-- Amazon Preview -->
+                                <div class="bg-white border-2 border-gray-200 rounded-lg p-6">
+                                    <div class="flex items-center gap-2 mb-4">
+                                        👁️ <h3 class="text-lg font-semibold text-gray-900">Amazon Listing Preview</h3>
+                                    </div>
+                                    <div class="space-y-4">
+                                        <div>
+                                            <h4 id="previewTitle" class="text-blue-600 text-lg font-medium hover:underline cursor-pointer"></h4>
+                                        </div>
+                                        <div class="flex gap-6">
+                                            <div class="w-64 h-64 bg-gray-100 rounded-lg flex items-center justify-center">
+                                                <span class="text-gray-400">Product Image</span>
+                                            </div>
+                                            <div class="flex-1 space-y-4">
+                                                <div>
+                                                    <h5 class="font-medium text-gray-900 mb-2">About this item</h5>
+                                                    <ul id="previewBullets" class="space-y-2"></ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="border-t pt-4">
+                                            <h5 class="font-medium text-gray-900 mb-2">Product Description</h5>
+                                            <p id="previewDescription" class="text-sm text-gray-700 leading-relaxed"></p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Quick Actions -->
+                                <div class="bg-blue-50 rounded-lg p-6">
+                                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <button onclick="copyAllContent()" class="p-4 bg-white border border-gray-200 rounded-lg hover:border-blue-300 transition-all text-left">
+                                            <div class="text-blue-600 mb-2 text-xl">📋</div>
+                                            <h4 class="font-medium text-gray-900">Copy All Content</h4>
+                                            <p class="text-sm text-gray-600">Copy everything for easy pasting</p>
+                                        </button>
+                                        <button onclick="exportToCSV()" class="p-4 bg-white border border-gray-200 rounded-lg hover:border-blue-300 transition-all text-left">
+                                            <div class="text-green-600 mb-2 text-xl">💾</div>
+                                            <h4 class="font-medium text-gray-900">Export to CSV</h4>
+                                            <p class="text-sm text-gray-600">Download for bulk upload</p>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="mt-8 text-center text-gray-500 text-sm">
+                <p>Amazon SEO Copywriter Pro - Generate compliant, high-converting Amazon listings</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let currentTab = 'input';
+        let productMode = 'single';
+        let activeProductIndex = 0;
+        let generatedContent = {};
+        let formData = {
+            brandName: '',
+            materials: '',
+            targetAudience: '',
+            products: [{
+                productName: '',
+                mainKeyword: '',
+                secondaryKeywords: '',
+                bulletPointKeywords: '',
+                bulletPointHeaders: '',
+                descriptionKeywords: '',
+                productFeatures: '',
+                packSize: '',
+                mklKeywords: ''
+            }]
+        };
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeEventListeners();
+            updateUI();
+        });
+
+        function initializeEventListeners() {
+            // Tab switching
+            document.getElementById('inputTab').addEventListener('click', () => switchTab('input'));
+            document.getElementById('templatesTab').addEventListener('click', () => switchTab('templates'));
+            document.getElementById('validationTab').addEventListener('click', () => switchTab('validation'));
+            document.getElementById('resultsTab').addEventListener('click', () => switchTab('results'));
+
+            // Mode switching
+            document.getElementById('singleMode').addEventListener('click', () => switchMode('single'));
+            document.getElementById('familyMode').addEventListener('click', () => switchMode('family'));
+
+            // Generate button
+            document.getElementById('generateBtn').addEventListener('click', generateContent);
+
+            // Product family controls
+            document.getElementById('addProductBtn').addEventListener('click', addProduct);
+
+            // Save/Load
+            document.getElementById('saveBtn').addEventListener('click', saveData);
+            document.getElementById('loadBtn').addEventListener('click', loadData);
+
+            // Export
+            document.getElementById('exportBtn').addEventListener('click', exportAllContent);
+
+            // Template clicks
+            document.querySelectorAll('[data-template]').forEach(template => {
+                template.addEventListener('click', (e) => {
+                    loadTemplate(e.currentTarget.dataset.template);
+                });
+            });
+
+            // Form change listeners
+            const inputs = ['brandName', 'materials', 'targetAudience', 'productName', 'mainKeyword', 'secondaryKeywords', 'bulletPointKeywords', 'bulletPointHeaders', 'descriptionKeywords', 'productFeatures', 'packSize', 'mklKeywords'];
+            inputs.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', (e) => updateFormData(id, e.target.value));
+                }
+            });
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            // Hide all content
+            ['inputContent', 'templatesContent', 'validationContent', 'resultsContent'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            
+            // Show selected content
+            document.getElementById(tab + 'Content').classList.remove('hidden');
+            
+            // Update tab buttons
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('bg-blue-100', 'text-blue-700');
+                btn.classList.add('hover:bg-gray-100');
+            });
+            
+            document.getElementById(tab + 'Tab').classList.add('bg-blue-100', 'text-blue-700');
+            document.getElementById(tab + 'Tab').classList.remove('hover:bg-gray-100');
+        }
+
+        function switchMode(mode) {
+            productMode = mode;
+            updateModeButtons();
+            updateUI();
+        }
+
+        function updateModeButtons() {
+            document.getElementById('singleMode').classList.remove('bg-white', 'shadow', 'text-blue-600');
+            document.getElementById('familyMode').classList.remove('bg-white', 'shadow', 'text-blue-600');
+            document.getElementById('singleMode').classList.add('text-gray-600', 'hover:text-gray-800');
+            document.getElementById('familyMode').classList.add('text-gray-600', 'hover:text-gray-800');
+            
+            if (productMode === 'single') {
+                document.getElementById('singleMode').classList.add('bg-white', 'shadow', 'text-blue-600');
+                document.getElementById('singleMode').classList.remove('text-gray-600', 'hover:text-gray-800');
+                document.getElementById('familySelector').classList.add('hidden');
+            } else {
+                document.getElementById('familyMode').classList.add('bg-white', 'shadow', 'text-blue-600');
+                document.getElementById('familyMode').classList.remove('text-gray-600', 'hover:text-gray-800');
+                document.getElementById('familySelector').classList.remove('hidden');
+                updateProductList();
+            }
+        }
+
+        function updateUI() {
+            updateModeButtons();
+            updateContentTitle();
+            updateFormFields();
+        }
+
+        function updateContentTitle() {
+            const currentProduct = formData.products[activeProductIndex];
+            const title = productMode === 'family' 
+                ? `Product ${activeProductIndex + 1}: ${currentProduct?.productName || 'Unnamed Product'}`
+                : 'Product Information';
+            
+            document.getElementById('contentTitle').textContent = title;
+            document.getElementById('currentProductIndicator').textContent = `Product ${activeProductIndex + 1} of ${formData.products.length}`;
+        }
+
+        function updateFormFields() {
+            const currentProduct = formData.products[activeProductIndex] || {};
+            
+            // Update shared fields
+            document.getElementById('brandName').value = formData.brandName || '';
+            document.getElementById('materials').value = formData.materials || '';
+            document.getElementById('targetAudience').value = formData.targetAudience || '';
+            
+            // Update product-specific fields
+            document.getElementById('productName').value = currentProduct.productName || '';
+            document.getElementById('mainKeyword').value = currentProduct.mainKeyword || '';
+            document.getElementById('secondaryKeywords').value = currentProduct.secondaryKeywords || '';
+            document.getElementById('bulletPointKeywords').value = currentProduct.bulletPointKeywords || '';
+            document.getElementById('bulletPointHeaders').value = currentProduct.bulletPointHeaders || '';
+            document.getElementById('descriptionKeywords').value = currentProduct.descriptionKeywords || '';
+            document.getElementById('productFeatures').value = currentProduct.productFeatures || '';
+            document.getElementById('packSize').value = currentProduct.packSize || '';
+            document.getElementById('mklKeywords').value = currentProduct.mklKeywords || '';
+        }
+
+        function updateFormData(field, value) {
+            if (['brandName', 'materials', 'targetAudience'].includes(field)) {
+                formData[field] = value;
+            } else {
+                if (!formData.products[activeProductIndex]) {
+                    formData.products[activeProductIndex] = {};
+                }
+                formData.products[activeProductIndex][field] = value;
+            }
+        }
+
+        function addProduct() {
+            formData.products.push({
+                productName: '',
+                mainKeyword: '',
+                secondaryKeywords: '',
+                bulletPointKeywords: '',
+                bulletPointHeaders: '',
+                descriptionKeywords: '',
+                productFeatures: '',
+                packSize: '',
+                mklKeywords: ''
+            });
+            updateProductList();
+            updateUI();
+        }
+
+        function removeProduct(index) {
+            if (formData.products.length > 1) {
+                formData.products.splice(index, 1);
+                if (activeProductIndex >= formData.products.length) {
+                    activeProductIndex = formData.products.length - 1;
+                }
+                updateProductList();
+                updateUI();
+            }
+        }
+
+        function updateProductList() {
+            const container = document.getElementById('productList');
+            container.innerHTML = '';
+            
+            formData.products.forEach((product, index) => {
+                const div = document.createElement('div');
+                div.className = `flex items-center justify-between p-3 rounded-lg border transition-all cursor-pointer ${
+                    activeProductIndex === index ? 'border-blue-300 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
+                }`;
+                
+                div.innerHTML = `
+                    <span class="flex-1 text-sm">${product.productName || `Product ${index + 1}`}</span>
+                    ${formData.products.length > 1 ? `<button onclick="removeProduct(${index})" class="p-1 text-red-500 hover:bg-red-100 rounded text-xs">🗑️</button>` : ''}
+                `;
+                
+                div.addEventListener('click', () => {
+                    activeProductIndex = index;
+                    updateUI();
+                    updateProductList();
+                });
+                
+                container.appendChild(div);
+            });
+        }
+
+        function generateContent() {
+            const currentProduct = formData.products[activeProductIndex];
+            
+            if (!formData.brandName || !currentProduct.productName || !currentProduct.mainKeyword) {
+                showNotification('Please fill in Brand Name, Product Name, and Main Keyword', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('generateBtn');
+            btn.disabled = true;
+            btn.innerHTML = '⏳ Generating...';
+
+            setTimeout(() => {
+                try {
+                    const results = {};
+                    
+                    formData.products.forEach((product, index) => {
+                        const title = `${formData.brandName} ${product.productName} | ${product.mainKeyword} | Premium Quality | ${product.secondaryKeywords} | Advanced Formula | ${product.packSize}`;
+                        
+                        const bulletPoints = [
+                            `PREMIUM QUALITY – ${product.productFeatures} with advanced formula designed for ${formData.targetAudience}`,
+                            `COMPLETE PACKAGE – Includes ${product.packSize} with everything you need for optimal results and maximum value`,
+                            `SUPERIOR MATERIALS – Made with ${formData.materials} for maximum durability, effectiveness, and long-lasting performance`,
+                            `EASY TO USE – Simple application process with clear instructions for best results and user satisfaction`,
+                            `TRUSTED BRAND – ${formData.brandName} has been delivering quality products with excellent customer satisfaction and proven results`
+                        ];
+
+                        const description = `Experience the difference with ${formData.brandName} ${product.productName}. Our premium ${product.mainKeyword} features ${product.productFeatures} and is expertly crafted with ${formData.materials}. Specifically designed for ${formData.targetAudience}, this exceptional product delivers outstanding results every time. Each ${product.packSize} is carefully manufactured to meet the highest quality standards and exceed customer expectations. Trust ${formData.brandName} for reliable, effective solutions that make a real difference in your daily routine.`;
+
+                        const searchTerms = `${product.mainKeyword} ${product.secondaryKeywords} ${product.bulletPointKeywords} ${product.descriptionKeywords} premium quality durable effective easy use reliable trusted brand satisfaction results`.substring(0, 500);
+
+                        results[index] = {
+                            title: title.length > 200 ? title.substring(0, 197) + '...' : title,
+                            bulletPoints: bulletPoints,
+                            description: description,
+                            searchTerms: searchTerms
+                        };
+                    });
+
+                    generatedContent = results;
+                    displayResults();
+                    switchTab('results');
+                    showNotification('Content generated successfully!');
+                } catch (error) {
+                    console.error('Generation error:', error);
+                    showNotification('Error generating content. Please try again.', 'error');
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = '📄 Generate SEO Content';
+                }
+            }, 2000);
+        }
+
+        function displayResults() {
+            if (!generatedContent[activeProductIndex]) return;
+
+            const content = generatedContent[activeProductIndex];
+            
+            // Show/hide appropriate sections
+            document.getElementById('emptyState').classList.add('hidden');
+            document.getElementById('generatedResults').classList.remove('hidden');
+
+            // Update product selector for family mode
+            if (productMode === 'family' && Object.keys(generatedContent).length > 1) {
+                document.getElementById('resultsProductSelector').classList.remove('hidden');
+                updateResultsProductSelector();
+            } else {
+                document.getElementById('resultsProductSelector').classList.add('hidden');
+            }
+
+            // Display content
+            document.getElementById('generatedTitle').textContent = content.title;
+            updateCharacterCount('titleCharCount', content.title.length, 175, 200);
+
+            const bulletsContainer = document.getElementById('generatedBullets');
+            bulletsContainer.innerHTML = '';
+            content.bulletPoints.forEach((bullet, index) => {
+                const div = document.createElement('div');
+                div.className = 'flex gap-3';
+                div.innerHTML = `
+                    <span class="text-blue-600 font-bold">•</span>
+                    <p class="text-gray-800 leading-relaxed flex-1">${bullet}</p>
+                `;
+                bulletsContainer.appendChild(div);
+            });
+            
+            const totalBulletChars = content.bulletPoints.join(' ').length;
+            updateCharacterCount('bulletsCharCount', totalBulletChars, 1250, 1750);
+
+            document.getElementById('generatedDescription').textContent = content.description;
+            updateCharacterCount('descriptionCharCount', content.description.length, 1300, 1500);
+
+            document.getElementById('generatedSearchTerms').textContent = content.searchTerms;
+            updateCharacterCount('searchTermsCharCount', content.searchTerms.length, 0, 500);
+
+            // Update Amazon preview
+            document.getElementById('previewTitle').textContent = content.title;
+            document.getElementById('previewDescription').textContent = content.description;
+            
+            const previewBullets = document.getElementById('previewBullets');
+            previewBullets.innerHTML = '';
+            content.bulletPoints.forEach(bullet => {
+                const li = document.createElement('li');
+                li.className = 'text-sm text-gray-700 flex gap-2';
+                li.innerHTML = `<span>•</span><span>${bullet}</span>`;
+                previewBullets.appendChild(li);
+            });
+        }
+
+        function updateCharacterCount(elementId, count, min, max) {
+            const element = document.getElementById(elementId);
+            element.textContent = `${count}/${max} chars`;
+            
+            element.classList.remove('good', 'warning', 'error');
+            if (count >= min && count <= max) {
+                element.classList.add('good');
+                element.style.background = '#dcfce7';
+            } else if (count > max) {
+                element.classList.add('error');
+                element.style.background = '#fecaca';
+            } else {
+                element.classList.add('warning');
+                element.style.background = '#fed7aa';
+            }
+        }
+
+        function updateResultsProductSelector() {
+            const container = document.getElementById('resultsProductSelector').firstElementChild;
+            container.innerHTML = '';
+            
+            formData.products.forEach((product, index) => {
+                if (generatedContent[index]) {
+                    const button = document.createElement('button');
+                    button.className = `px-4 py-2 rounded-lg transition-all ${
+                        activeProductIndex === index ? 'bg-blue-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                    }`;
+                    button.textContent = product.productName || `Product ${index + 1}`;
+                    button.addEventListener('click', () => {
+                        activeProductIndex = index;
+                        displayResults();
+                        updateResultsProductSelector();
+                    });
+                    container.appendChild(button);
+                }
+            });
+        }
+
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent;
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showNotification('Copied to clipboard!');
+                });
+            } else {
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showNotification('Copied to clipboard!');
+            }
+        }
+
+        function copyBulletPoints() {
+            if (!generatedContent[activeProductIndex]) return;
+            const text = generatedContent[activeProductIndex].bulletPoints.join('\n');
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showNotification('Bullet points copied to clipboard!');
+                });
+            } else {
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showNotification('Bullet points copied to clipboard!');
+            }
+        }
+
+        function copyAllContent() {
+            if (!generatedContent[activeProductIndex]) return;
+            
+            const content = generatedContent[activeProductIndex];
+            const allContent = `TITLE:\n${content.title}\n\nBULLET POINTS:\n${content.bulletPoints.map((b, i) => `${i+1}. ${b}`).join('\n')}\n\nDESCRIPTION:\n${content.description}\n\nSEARCH TERMS:\n${content.searchTerms}`;
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(allContent).then(() => {
+                    showNotification('All content copied to clipboard!');
+                });
+            } else {
+                const textArea = document.createElement('textarea');
+                textArea.value = allContent;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showNotification('All content copied to clipboard!');
+            }
+        }
+
+        function exportToCSV() {
+            if (!generatedContent[activeProductIndex]) return;
+            
+            const content = generatedContent[activeProductIndex];
+            const currentProduct = formData.products[activeProductIndex];
+            const csvContent = `Title,Bullet 1,Bullet 2,Bullet 3,Bullet 4,Bullet 5,Description,Search Terms\n"${content.title}","${content.bulletPoints.join('","')}","${content.description}","${content.searchTerms}"`;
+            
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${currentProduct.productName || 'product'}-listing.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showNotification('CSV exported successfully!');
+        }
+
+        function exportAllContent() {
+            const exportData = Object.entries(generatedContent).map(([index, content]) => ({
+                productName: formData.products[index].productName,
+                ...content
+            }));
+            
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'amazon-seo-content.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showNotification('All content exported successfully!');
+        }
+
+        function saveData() {
+            const data = {
+                formData: formData,
+                generatedContent: generatedContent,
+                activeProductIndex: activeProductIndex,
+                productMode: productMode
+            };
+            
+            localStorage.setItem('amazonSEOData', JSON.stringify(data));
+            showNotification('Data saved successfully!');
+        }
+
+        function loadData() {
+            const savedData = localStorage.getItem('amazonSEOData');
+            if (savedData) {
+                try {
+                    const data = JSON.parse(savedData);
+                    formData = data.formData || formData;
+                    generatedContent = data.generatedContent || {};
+                    activeProductIndex = data.activeProductIndex || 0;
+                    productMode = data.productMode || 'single';
+                    
+                    updateUI();
+                    updateFormFields();
+                    if (Object.keys(generatedContent).length > 0) {
+                        displayResults();
+                    }
+                    showNotification('Data loaded successfully!');
+                } catch (error) {
+                    showNotification('Error loading data', 'error');
+                }
+            } else {
+                showNotification('No saved data found', 'error');
+            }
+        }
+
+        function loadTemplate(templateName) {
+            const templates = {
+                supplements: {
+                    targetAudience: 'Health-conscious adults seeking natural wellness solutions',
+                    materials: 'Premium natural ingredients, vegetarian capsules',
+                    productFeatures: 'Third-party tested, GMP certified, non-GMO formula'
+                },
+                electronics: {
+                    targetAudience: 'Tech enthusiasts and professionals seeking reliable devices',
+                    materials: 'Durable ABS plastic, premium components',
+                    productFeatures: 'Advanced technology, user-friendly design, warranty included'
+                },
+                home: {
+                    targetAudience: 'Homeowners looking to improve their living space',
+                    materials: 'High-quality materials, weather-resistant finish',
+                    productFeatures: 'Easy installation, durable construction, versatile design'
+                },
+                beauty: {
+                    targetAudience: 'Beauty enthusiasts seeking effective skincare solutions',
+                    materials: 'Natural ingredients, dermatologist-tested formula',
+                    productFeatures: 'Suitable for all skin types, cruelty-free, proven results'
+                }
+            };
+
+            const template = templates[templateName];
+            if (template) {
+                formData.targetAudience = template.targetAudience;
+                formData.materials = template.materials;
+                if (!formData.products[activeProductIndex]) {
+                    formData.products[activeProductIndex] = {};
+                }
+                formData.products[activeProductIndex].productFeatures = template.productFeatures;
+                
+                updateFormFields();
+                showNotification(`${templateName.charAt(0).toUpperCase() + templateName.slice(1)} template loaded!`);
+                switchTab('input');
+            }
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type === 'error' ? 'error' : ''}`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
