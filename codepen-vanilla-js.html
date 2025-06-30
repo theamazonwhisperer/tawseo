@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon SEO Copywriter Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { 
+            margin: 0; 
+            padding: 0; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+        }
+        .animate-spin { 
+            animation: spin 1s linear infinite; 
+        }
+        @keyframes spin { 
+            0% { transform: rotate(0deg); } 
+            100% { transform: rotate(360deg); } 
+        }
+        .hidden { 
+            display: none !important; 
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+        }
+        .notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- App Container -->
+    <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+        <div class="max-w-6xl mx-auto">
+            <!-- Header -->
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                    <div>
+                        <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">
+                            📄 Amazon SEO Copywriter Pro
+                        </h1>
+                        <p class="text-gray-600 mt-2">
+                            Generate optimized Amazon listings with AI-powered SEO
+                        </p>
+                    </div>
+                    <div class="flex bg-gray-100 rounded-lg p-1">
+                        <button id="singleMode" class="px-4 py-2 rounded-md text-sm transition-all bg-white shadow text-blue-600">
+                            📄 Single
+                        </button>
+                        <button id="familyMode" class="px-4 py-2 rounded-md text-sm transition-all text-gray-600 hover:text-gray-800">
+                            👥 Family
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="bg-white rounded-xl shadow-lg p-4 mb-6">
+                <nav class="flex flex-wrap gap-2">
+                    <button id="inputTab" class="px-4 py-2 rounded-lg text-sm transition-all bg-blue-100 text-blue-700">
+                        📝 Input
+                    </button>
+                    <button id="validationTab" class="px-4 py-2 rounded-lg text-sm transition-all hover:bg-gray-100">
+                        ✅ Validation
+                    </button>
+                    <button id="resultsTab" class="px-4 py-2 rounded-lg text-sm transition-all hover:bg-gray-100">
+                        📊 Results
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                
+                <!-- Input Tab -->
+                <div id="inputContent" class="space-y-6">
+                    <h2 class="text-xl font-bold text-gray-900" id="contentTitle">Product Information</h2>
+
+                    <!-- Brand and Materials -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Brand Name *</label>
+                            <input type="text" id="brandName" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Enter brand name">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Materials</label>
+                            <input type="text" id="materials" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Materials or ingredients">
+                        </div>
+                    </div>
+
+                    <!-- Target Audience -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Target Audience</label>
+                        <textarea id="targetAudience" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Describe your target customer"></textarea>
+                    </div>
+
+                    <!-- Product Details -->
+                    <div class="border-t pt-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Product Details</h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Product Name *</label>
+                                <input type="text" id="productName" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Enter product name">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Main Keyword *</label>
+                                <input type="text" id="mainKeyword" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Primary keyword">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Secondary Keywords</label>
+                                <input type="text" id="secondaryKeywords" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Secondary keywords">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Pack Size</label>
+                                <input type="text" id="packSize" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Pack size or quantity">
+                            </div>
+                        </div>
+
+                        <div class="mt-4 space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Product Features</label>
+                                <textarea id="productFeatures" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Enter product features"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Bullet Point Keywords</label>
+                                <textarea id="bulletPointKeywords" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Enter bullet point keywords"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Description Keywords</label>
+                                <textarea id="descriptionKeywords" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Enter description keywords"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Backend Keywords</label>
+                                <textarea id="mklKeywords" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Enter backend keywords"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Generate Button -->
+                    <div class="flex justify-center pt-6">
+                        <button id="generateBtn" class="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50 transition-all font-semibold">
+                            📄 Generate SEO Content
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Validation Tab -->
+                <div id="validationContent" class="space-y-6 hidden">
+                    <h2 class="text-xl font-bold text-gray-900">Compliance & Validation</h2>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                            <h3 class="font-medium text-green-800 mb-2">✅ Character Count Guidelines</h3>
+                            <ul class="text-sm text-green-700 space-y-1">
+                                <li>• Title: 175-200 characters</li>
+                                <li>• Bullet Points: 1250-1750 characters total</li>
+                                <li>• Description: 1300-1500 characters</li>
+                                <li>• Search Terms: Up to 500 characters</li>
+                            </ul>
+                        </div>
+                        <div class="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                            <h3 class="font-medium text-amber-800 mb-2">⚠️ Forbidden Words</h3>
+                            <p class="text-sm text-amber-700">
+                                Avoid: "best", "top-rated", medical claims, time-sensitive claims, superlatives
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Tab -->
+                <div id="resultsContent" class="space-y-6 hidden">
+                    <h2 class="text-xl font-bold text-gray-900">Generated Content</h2>
+
+                    <!-- Empty State -->
+                    <div id="emptyState" class="text-center py-12">
+                        <div class="text-4xl mb-4">📄</div>
+                        <p class="text-gray-600">Fill out the form and generate content to see results here.</p>
+                    </div>
+
+                    <!-- Results -->
+                    <div id="generatedResults" class="space-y-4 hidden">
+                        <!-- Title -->
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-semibold text-gray-900">Product Title</h3>
+                                <button onclick="copyToClipboard('generatedTitle')" class="text-blue-600 hover:bg-blue-100 p-2 rounded transition-all">📋</button>
+                            </div>
+                            <p id="generatedTitle" class="text-gray-800 text-sm leading-relaxed"></p>
+                            <div id="titleCharCount" class="text-xs text-gray-500 mt-2"></div>
+                        </div>
+
+                        <!-- Bullet Points -->
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-semibold text-gray-900">Bullet Points</h3>
+                                <button onclick="copyBulletPoints()" class="text-blue-600 hover:bg-blue-100 p-2 rounded transition-all">📋</button>
+                            </div>
+                            <div id="generatedBullets" class="space-y-2"></div>
+                            <div id="bulletsCharCount" class="text-xs text-gray-500 mt-2"></div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-semibold text-gray-900">Description</h3>
+                                <button onclick="copyToClipboard('generatedDescription')" class="text-blue-600 hover:bg-blue-100 p-2 rounded transition-all">📋</button>
+                            </div>
+                            <p id="generatedDescription" class="text-gray-800 text-sm leading-relaxed"></p>
+                            <div id="descriptionCharCount" class="text-xs text-gray-500 mt-2"></div>
+                        </div>
+
+                        <!-- Search Terms -->
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-semibold text-gray-900">Search Terms</h3>
+                                <button onclick="copyToClipboard('generatedSearchTerms')" class="text-blue-600 hover:bg-blue-100 p-2 rounded transition-all">📋</button>
+                            </div>
+                            <p id="generatedSearchTerms" class="text-gray-800 text-sm font-mono bg-white p-2 rounded border"></p>
+                            <div id="searchTermsCharCount" class="text-xs text-gray-500 mt-2"></div>
+                        </div>
+
+                        <!-- Copy All Button -->
+                        <div class="text-center pt-4">
+                            <button onclick="copyAllContent()" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all font-semibold">
+                                📋 Copy All Content
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let currentTab = 'input';
+        let productMode = 'single';
+        let generatedContent = null;
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeEventListeners();
+        });
+
+        function initializeEventListeners() {
+            // Tab switching
+            document.getElementById('inputTab').addEventListener('click', () => switchTab('input'));
+            document.getElementById('validationTab').addEventListener('click', () => switchTab('validation'));
+            document.getElementById('resultsTab').addEventListener('click', () => switchTab('results'));
+
+            // Mode switching
+            document.getElementById('singleMode').addEventListener('click', () => switchMode('single'));
+            document.getElementById('familyMode').addEventListener('click', () => switchMode('family'));
+
+            // Generate button
+            document.getElementById('generateBtn').addEventListener('click', generateContent);
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            // Hide all content
+            document.getElementById('inputContent').classList.add('hidden');
+            document.getElementById('validationContent').classList.add('hidden');
+            document.getElementById('resultsContent').classList.add('hidden');
+            
+            // Show selected content
+            document.getElementById(tab + 'Content').classList.remove('hidden');
+            
+            // Update tab buttons
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('bg-blue-100', 'text-blue-700');
+                btn.classList.add('hover:bg-gray-100');
+            });
+            
+            document.getElementById(tab + 'Tab').classList.add('bg-blue-100', 'text-blue-700');
+            document.getElementById(tab + 'Tab').classList.remove('hover:bg-gray-100');
+        }
+
+        function switchMode(mode) {
+            productMode = mode;
+            
+            // Update mode buttons
+            document.getElementById('singleMode').classList.remove('bg-white', 'shadow', 'text-blue-600');
+            document.getElementById('familyMode').classList.remove('bg-white', 'shadow', 'text-blue-600');
+            document.getElementById('singleMode').classList.add('text-gray-600', 'hover:text-gray-800');
+            document.getElementById('familyMode').classList.add('text-gray-600', 'hover:text-gray-800');
+            
+            if (mode === 'single') {
+                document.getElementById('singleMode').classList.add('bg-white', 'shadow', 'text-blue-600');
+                document.getElementById('singleMode').classList.remove('text-gray-600', 'hover:text-gray-800');
+            } else {
+                document.getElementById('familyMode').classList.add('bg-white', 'shadow', 'text-blue-600');
+                document.getElementById('familyMode').classList.remove('text-gray-600', 'hover:text-gray-800');
+            }
+        }
+
+        function generateContent() {
+            const brandName = document.getElementById('brandName').value;
+            const productName = document.getElementById('productName').value;
+            const mainKeyword = document.getElementById('mainKeyword').value;
+            
+            if (!brandName || !productName || !mainKeyword) {
+                showNotification('Please fill in Brand Name, Product Name, and Main Keyword', 'error');
+                return;
+            }
+
+            // Show loading
+            const btn = document.getElementById('generateBtn');
+            btn.disabled = true;
+            btn.innerHTML = '⏳ Generating...';
+
+            // Simulate generation delay
+            setTimeout(() => {
+                const materials = document.getElementById('materials').value;
+                const targetAudience = document.getElementById('targetAudience').value;
+                const secondaryKeywords = document.getElementById('secondaryKeywords').value;
+                const packSize = document.getElementById('packSize').value;
+                const productFeatures = document.getElementById('productFeatures').value;
+                const bulletPointKeywords = document.getElementById('bulletPointKeywords').value;
+                const descriptionKeywords = document.getElementById('descriptionKeywords').value;
+                const mklKeywords = document.getElementById('mklKeywords').value;
+
+                // Generate content
+                const title = `${brandName} ${productName} | ${mainKeyword} | Premium Quality | ${secondaryKeywords} | Advanced Formula | ${packSize}`;
+                
+                const bulletPoints = [
+                    `PREMIUM QUALITY – ${productFeatures} with advanced formula designed for ${targetAudience}`,
+                    `COMPLETE PACKAGE – Includes ${packSize} with everything you need for optimal results`,
+                    `SUPERIOR MATERIALS – Made with ${materials} for maximum durability and effectiveness`,
+                    `EASY TO USE – Simple application process with clear instructions for best results`,
+                    `TRUSTED BRAND – ${brandName} has been delivering quality products with excellent customer satisfaction`
+                ];
+
+                const description = `Experience the difference with ${brandName} ${productName}. Our premium ${mainKeyword} features ${productFeatures} and is expertly crafted with ${materials}. Perfect for ${targetAudience}, this product delivers exceptional results. Each ${packSize} is carefully crafted to meet the highest quality standards.`;
+
+                const searchTerms = `${mainKeyword} ${secondaryKeywords} ${bulletPointKeywords} ${descriptionKeywords} premium quality durable effective easy use reliable trusted brand`.substring(0, 500);
+
+                generatedContent = {
+                    title: title.length > 200 ? title.substring(0, 197) + '...' : title,
+                    bulletPoints: bulletPoints,
+                    description: description,
+                    searchTerms: searchTerms
+                };
+
+                displayResults();
+                switchTab('results');
+                
+                // Reset button
+                btn.disabled = false;
+                btn.innerHTML = '📄 Generate SEO Content';
+                
+                showNotification('Content generated successfully!');
+            }, 2000);
+        }
+
+        function displayResults() {
+            if (!generatedContent) return;
+
+            // Show results section
+            document.getElementById('emptyState').classList.add('hidden');
+            document.getElementById('generatedResults').classList.remove('hidden');
+
+            // Display title
+            document.getElementById('generatedTitle').textContent = generatedContent.title;
+            document.getElementById('titleCharCount').textContent = `${generatedContent.title.length}/200 characters`;
+
+            // Display bullet points
+            const bulletsContainer = document.getElementById('generatedBullets');
+            bulletsContainer.innerHTML = '';
+            generatedContent.bulletPoints.forEach((bullet, index) => {
+                const p = document.createElement('p');
+                p.className = 'text-gray-800 text-sm';
+                p.textContent = `• ${bullet}`;
+                bulletsContainer.appendChild(p);
+            });
+            
+            const totalBulletChars = generatedContent.bulletPoints.join(' ').length;
+            document.getElementById('bulletsCharCount').textContent = `${totalBulletChars}/1750 characters`;
+
+            // Display description
+            document.getElementById('generatedDescription').textContent = generatedContent.description;
+            document.getElementById('descriptionCharCount').textContent = `${generatedContent.description.length}/1500 characters`;
+
+            // Display search terms
+            document.getElementById('generatedSearchTerms').textContent = generatedContent.searchTerms;
+            document.getElementById('searchTermsCharCount').textContent = `${generatedContent.searchTerms.length}/500 characters`;
+        }
+
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent;
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showNotification('Copied to clipboard!');
+                });
+            } else {
+                // Fallback
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showNotification('Copied to clipboard!');
+            }
+        }
+
+        function copyBulletPoints() {
+            if (!generatedContent) return;
+            const text = generatedContent.bulletPoints.join('\n');
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showNotification('Bullet points copied to clipboard!');
+                });
+            } else {
+                // Fallback
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showNotification('Bullet points copied to clipboard!');
+            }
+        }
+
+        function copyAllContent() {
+            if (!generatedContent) return;
+            
+            const allContent = `TITLE:\n${generatedContent.title}\n\nBULLET POINTS:\n${generatedContent.bulletPoints.map((b, i) => `${i+1}. ${b}`).join('\n')}\n\nDESCRIPTION:\n${generatedContent.description}\n\nSEARCH TERMS:\n${generatedContent.searchTerms}`;
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(allContent).then(() => {
+                    showNotification('All content copied to clipboard!');
+                });
+            } else {
+                // Fallback
+                const textArea = document.createElement('textarea');
+                textArea.value = allContent;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showNotification('All content copied to clipboard!');
+            }
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            
+            if (type === 'error') {
+                notification.style.background = '#ef4444';
+            }
+            
+            document.body.appendChild(notification);
+            
+            // Show notification
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            // Hide notification
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
